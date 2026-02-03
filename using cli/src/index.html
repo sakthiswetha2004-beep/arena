@@ -17,16 +17,16 @@
         <p class="font-bold text-cyan-900 pl-190">Sign in to your account</p>
     </div>
     <div class="relative mr-90 ">
-        <label class="font-medium text-cyan pl-190 block mt-6">Email</label>
+        <label class="font-medium text-cyan pl-190 block mt-6" id="mail">Email</label>
         <input type="email" placeholder="Enter your email" class="border p-3 ml-190 mt-2 w-110 h-9 rounded-md">
-        <label class="font-medium text-cyan pl-190 block mt-6">Password</label>
+        <label class="font-medium text-cyan pl-190 block mt-6" id="pass">Password</label>
         <input type="password" placeholder="Enter your password" class="border p-3 ml-190 mt-2 w-110 h-9 rounded-md">
-        <span class="material-icons absolute right-0 -mt-7.5 text-gray-400">
+        <span class="material-icons absolute right-0 -mt-7.5 text-gray-400 cursor-pointer">
         visibility
         </span>
     </div>
      <p class="text-cyan-600 pl-270 block mt-6">Forgot Pasword?</p>
-    <button class="bg-cyan-900 text-white w-110 h-10 rounded-md ml-190 block mt-3">
+    <button class="bg-cyan-900 text-white w-110 h-10 rounded-md ml-190 block mt-3" id="submit">
     Sign In
     </button>
     <p class="text-gray-400 pl-230 block mt-2">Or continue with</p>
@@ -37,5 +37,59 @@
     </div>
     <p class="text-black font-medium pl-222 block mt-2">New User?<span class="text-cyan-700 ml-2">Create Account</span></p>
     <p class="text-gray-400 pl-219 block mt-5">© Zophrix All Rights Reserved</p>
+
+<script>
+    
+  document.addEventListener("DOMContentLoaded", function () {
+
+  const emailInput = document.getElementById("mail");
+  const passInput = document.getElementById("pass");
+  const button = document.getElementById("submit");
+  const messageDiv = document.getElementById("message"); // make sure you have this div
+
+  button.addEventListener("click", async function (event) {
+    event.preventDefault();
+    messageDiv.textContent = ""; 
+    const email = emailInput.value;
+    const password = passInput.value;
+
+    console.log("Email:", email);
+    console.log("Password:", password);
+
+    if (email === "" || password === "") {
+      alert("Please fill all the details");
+      return;
+    }
+
+    // Fetch request inside async function
+    try {
+      const response = await fetch("http://localhost:5000/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        window.location.href = "login.html";
+      } else {
+        messageDiv.textContent = data.message;
+      }
+
+    } catch (error) {
+      messageDiv.textContent = "Server error. Please try again later.";
+      console.error(error);
+    }
+  });
+
+});
+
+
+
+
+</script>
+
+
 </body>
 </html>
