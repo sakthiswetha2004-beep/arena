@@ -9,26 +9,30 @@ app.use(express.json());
 app.use(express.static("public"));
 
 
-/* 🔹 LOGIN API */
 app.post("/login", (req, res) => {
-  const { email} = req.body;
+  const { email, password } = req.body;
 
-  const sql = "SELECT password FROM users WHERE email = ? ";
+  const sql = "SELECT password FROM users WHERE email = ?";
+
   db.query(sql, [email], (err, result) => {
     if (err) {
-      return res.status(500).json({ message: "Server error" });
+      return res.status(500).json({ message: "DB error" });
     }
 
-    if (result.length > 0) {
-      res.json({ success: true, message: "Login successful" });
+    if (result.length === 0) {
+      return res.json({ message: "login failed" });
+    }
+
+    const dbpassword = result[0].password;
+
+    if (dbpassword === password) {
+      res.json({ message: "login successful" });
     } else {
-      res.status(401).json({
-        success: false,
-        message: "Invalid email or password"
-      });
+      res.json({ message: "login failed" });
     }
   });
 });
+
 
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");

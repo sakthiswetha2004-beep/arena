@@ -3,10 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login page</title>
 </head>
 <body>
-    <h1>LOGIN SUCCESSFULLY</h1>
-    <button class="go back">go back</button>
+
+    <h1 id="msg"></h1>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const status = params.get("status");
+
+      const msgEl = document.getElementById("msg");
+
+      if (status === "success") {
+        msgEl.innerText = "Login Successful";
+        msgEl.style.color = "green";
+      } else {
+        msgEl.innerText = "Login Failed";
+        msgEl.style.color = "red";
+      }
+    </script>
+
 </body>
 </html>
